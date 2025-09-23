@@ -1,0 +1,14 @@
+{% extends 'base.html' %} {% block content %}
+  <h2>Mon Profile</h2>
+  <p>Nom d'utilisateur : {{ user.username }}</p>
+  <p>Email : {{ user.email }}</p>
+  <p>Prénom : {{ user.first_name }}</p>
+  <p>Nom : {{ user.last_name }}</p>
+
+  <h3>Information Suplimentaire :</h3>
+  <p>Adresse : {{ userprofile.adresse }}</p>
+  <p>Ville : {{ user.userprofile.city }}</p>
+  <p>Pays : {{ user.profile.country }}</p>
+
+  <a href=" {% url 'accounts:edit_profile' %} ">Modifier le Profil</a>
+{% endblock %}

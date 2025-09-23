@@ -1,0 +1,41 @@
+<div class="alert alert-success" role="alert">
+  <h4>Bonjour, {{ user.username }} ! 👋</h4>
+  <p>
+    Vous êtes connecté avec l'email : <strong>{{ user.email }}</strong>
+  </p>
+</div>
+
+<div class="row mt-4">
+  <div class="col-md-4 mb-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <i class="bi bi-person-circle" style="font-size: 2rem"></i>
+        <h5 class="card-title">Mon Profil</h5>
+        <p class="card-text">Gérez vos informations personnelles</p>
+        <a href="{% url 'accounts:profile' %}" class="btn btn-primary">Voir mon profil</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <i class="bi bi-gear" style="font-size: 2rem"></i>
+        <h5 class="card-title">Paramètres</h5>
+        <p class="card-text">Modifiez vos préférences</p>
+        <a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-primary">Modifier le profil</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <i class="bi bi-box-arrow-right" style="font-size: 2rem"></i>
+        <h5 class="card-title">Déconnexion</h5>
+        <p class="card-text">Quittez votre session</p>
+        <a href="{% url 'accounts:logout' %}" class="btn btn-outline-danger">Se déconnecter</a>
+      </div>
+    </div>
+  </div>
+</div>

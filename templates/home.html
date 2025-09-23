@@ -1,0 +1,22 @@
+<!-- templates/home.html -->
+{% extends 'base.html' %} {% load static %} {% block title %}
+  Accueil - Mon Application
+{% endblock %} {% block content %}
+  <div class="container mt-5">
+    <div class="jumbotron">
+      <h1 class="display-4">Bienvenue sur Mon Application</h1>
+      <p class="lead">Une application Django moderne avec système d'authentification personnalisé.</p>
+      <hr class="my-4" />
+
+      {% if user.is_authenticated %}
+        {% include 'dashboard.html' %}
+      {% else %}
+        <p>Rejoignez-nous dès aujourd'hui pour accéder à toutes les fonctionnalités.</p>
+        <div class="mt-4">
+          <a class="btn btn-primary btn-lg me-3" href="{% url 'accounts:login' %}" role="button"><i class="bi bi-box-arrow-in-right"></i> Se connecter</a>
+          <a class="btn btn-outline-secondary btn-lg" href="{% url 'accounts:register' %}" role="button"><i class="bi bi-person-plus"></i> S'inscrire</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
