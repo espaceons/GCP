@@ -1,11 +1,16 @@
 <!-- templates/home.html -->
-{% extends 'base.html' %} {% load static %} {% block title %}
-  Accueil - Mon Application
-{% endblock %} {% block content %}
+{% extends 'formations/base.html' %}
+{% load static %}
+
+{% block title %}
+  Accueil - Centre de Formation
+{% endblock %}
+
+{% block content %}
   <div class="container mt-5">
-    <div class="jumbotron">
-      <h1 class="display-4">Bienvenue sur Mon Application</h1>
-      <p class="lead">Une application Django moderne avec système d'authentification personnalisé.</p>
+    <div class="jumbotron bg-light p-5 rounded">
+      <h1 class="display-4">Bienvenue au Centre de Formation</h1>
+      <p class="lead">Gestion complète des sessions, cours, formateurs et apprentis.</p>
       <hr class="my-4" />
 
       {% if user.is_authenticated %}
@@ -17,53 +22,87 @@
         </div>
 
         <div class="row mt-4">
-          <div class="col-md-4 mb-3">
-            <div class="card">
+          <!-- Sessions -->
+          <div class="col-md-3 mb-3">
+            <div class="card h-100">
               <div class="card-body text-center">
-                <i class="bi bi-person-circle" style="font-size: 2rem"></i>
+                <i class="bi bi-calendar-event text-primary" style="font-size: 2rem"></i>
                 <h5 class="card-title">Sessions</h5>
-                <p class="card-text">Gérez les informations des Sessions</p>
-                {% comment %} <a href="{% url 'accounts:profile' %}" class="btn btn-primary">Voir mon profil</a> {% endcomment %}
-                <a href="{% url 'accounts:profile' %}" class="btn btn-primary">Voir Sessions</a>
+                <p class="card-text">Gérez les sessions de formation</p>
+                <a href="{% url 'param:sessionsliste' %}" class="btn btn-primary">Voir Sessions</a>
               </div>
             </div>
           </div>
-          <div class="col-md-4 mb-3">
-            <div class="card">
+
+          <!-- Cours -->
+          <div class="col-md-3 mb-3">
+            <div class="card h-100">
               <div class="card-body text-center">
-                <i class="bi bi-person-circle" style="font-size: 2rem"></i>
+                <i class="bi bi-book text-success" style="font-size: 2rem"></i>
                 <h5 class="card-title">Cours</h5>
-                <p class="card-text">Gérez les informations des Cours</p>
-                {% comment %} <a href="{% url 'accounts:profile' %}" class="btn btn-primary">Voir mon profil</a> {% endcomment %}
-                <a href="{% url 'accounts:profile' %}" class="btn btn-primary">Voir Cours</a>
+                <p class="card-text">Consultez les cours disponibles</p>
+                <a href="{% url 'param:coursliste' %}" class="btn btn-success">Voir Cours</a>
               </div>
             </div>
           </div>
 
-          <div class="col-md-4 mb-3">
-            <div class="card">
+          <!-- Formateurs -->
+          <div class="col-md-3 mb-3">
+            <div class="card h-100">
               <div class="card-body text-center">
-                <i class="bi bi-gear" style="font-size: 2rem"></i>
-                <h5 class="card-title">Formateur</h5>
-                <p class="card-text">Gérez les informations des Formateurs</p>
-                <a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-primary">Formateur</a>
+                <i class="bi bi-person-badge text-warning" style="font-size: 2rem"></i>
+                <h5 class="card-title">Formateurs</h5>
+                <p class="card-text">Découvrez nos formateurs</p>
+                <a href="{% url 'formateur:liste_formateurs' %}" class="btn btn-warning">Voir Formateurs</a>
               </div>
             </div>
           </div>
 
-          <div class="col-md-4 mb-3">
-            <div class="card">
+          <!-- Apprentis -->
+          <div class="col-md-3 mb-3">
+            <div class="card h-100">
               <div class="card-body text-center">
-                <i class="bi bi-box-arrow-right" style="font-size: 2rem"></i>
+                <i class="bi bi-people text-info" style="font-size: 2rem"></i>
                 <h5 class="card-title">Apprentis</h5>
-                <p class="card-text">Gérez les informations des Apprentis</p>
-                <a href="{% url 'accounts:logout' %}" class="btn btn-outline-danger">Apprentis</a>
+                <p class="card-text">Gérez les apprentis</p>
+                <a href="{% url 'apprentis:liste_apprentis' %}" class="btn btn-info">Voir Apprentis</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Statistiques rapides -->
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-graph-up"></i> Statistiques</h5>
+              </div>
+              <div class="card-body">
+                <div class="row text-center">
+                  <div class="col-md-3">
+                    <h3>{{ sessions_count }}</h3>
+                    <small class="text-muted">Sessions actives</small>
+                  </div>
+                  <div class="col-md-3">
+                    <h3>{{ cours_count }}</h3>
+                    <small class="text-muted">Cours disponibles</small>
+                  </div>
+                  <div class="col-md-3">
+                    <h3>{{ formateurs_count }}</h3>
+                    <small class="text-muted">Formateurs</small>
+                  </div>
+                  <div class="col-md-3">
+                    <h3>{{ apprentis_count }}</h3>
+                    <small class="text-muted">Apprentis</small>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       {% else %}
-        <p>Rejoignez-nous dès aujourd'hui pour accéder à toutes les fonctionnalités.</p>
+        <p>Connectez-vous pour accéder à toutes les fonctionnalités de gestion.</p>
         <div class="mt-4">
           <a class="btn btn-primary btn-lg me-3" href="{% url 'accounts:login' %}" role="button"><i class="bi bi-box-arrow-in-right"></i> Se connecter</a>
           <a class="btn btn-outline-secondary btn-lg" href="{% url 'accounts:register' %}" role="button"><i class="bi bi-person-plus"></i> S'inscrire</a>

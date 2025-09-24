@@ -23,8 +23,7 @@ urlpatterns = [
          name='password_change_done'),
 
     # URLs d'authentifcation :
-    path('login/', auth_views.LoginView.as_view(
-        template_name='accounts/login.html'), name='login'),
+    path('login/', views.custom_login, name='login'),
     path('logout/', views.custom_logout, name='logout'),
 
 ]

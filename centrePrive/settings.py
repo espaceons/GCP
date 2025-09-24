@@ -56,7 +56,11 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 # Redirection après login
 LOGIN_REDIRECT_URL = 'accounts:dashboard'  # Redirection après connexion
 LOGOUT_REDIRECT_URL = '/'  # Redirection après déconnexion
-LOGIN_URL = '/accounts/login/'
+LOGIN_URL = 'acounts:login'  # URL de la page de connexion
+
+# Configuration des sessions
+SESSION_COOKIE_AGE = 1209600  # 2 semaines en secondes
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Session persistante par défaut
 
 
 # settings.py - Configuration CORRECTE

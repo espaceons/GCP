@@ -1,16 +1,13 @@
-from .forms import CustomUserChangeForm, UserProfileForm
 from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.shortcuts import render
 from django.contrib import messages
-# Create your views here.
-
-
-from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from .forms import CustomUserChangeForm, RegistrationForm, UserProfileForm
 from .models import UserProfile
 from django.contrib.auth.decorators import login_required
+from django.utils.http import url_has_allowed_host_and_scheme
+# Create your views here.
 
 
 # def register(request):
@@ -143,6 +140,52 @@ def edit_profile(request):
 @login_required
 def dashboard(request):
     return render(request, 'home.html')
+
+
+def custom_login(request):
+    # Si l'utilisateur est déjà connecté, rediriger vers la page d'accueil
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    if request.method == 'POST':
+        # Récupérer les données du formulaire
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        remember_me = request.POST.get('remember_me')
+
+        # Authentifier l'utilisateur
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            # Connexion réussie
+            login(request, user)
+
+            # Gestion de "Se souvenir de moi"
+            if not remember_me:
+                # Session expire à la fermeture du navigateur
+                request.session.set_expiry(0)
+            else:
+                # Session longue durée (2 semaines)
+                request.session.set_expiry(1209600)  # 2 semaines en secondes
+
+            # Redirection sécurisée
+            next_url = request.POST.get('next') or request.GET.get('next')
+            if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts=None):
+                return redirect(next_url)
+
+            messages.success(request, f'Bienvenue {user.username} !')
+            return redirect('home')
+        else:
+            # Échec de l'authentification
+            messages.error(
+                request, 'Nom d\'utilisateur ou mot de passe incorrect.')
+
+    # Préparer l'URL de redirection pour le formulaire
+    next_url = request.GET.get('next', '')
+
+    return render(request, 'accounts/login.html', {
+        'next': next_url
+    })
 
 
 @login_required
