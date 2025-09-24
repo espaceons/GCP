@@ -1,0 +1,74 @@
+<!-- templates/home.html -->
+{% extends 'base.html' %} {% load static %} {% block title %}
+  Accueil - Mon Application
+{% endblock %} {% block content %}
+  <div class="container mt-5">
+    <div class="jumbotron">
+      <h1 class="display-4">Bienvenue sur Mon Application</h1>
+      <p class="lead">Une application Django moderne avec système d'authentification personnalisé.</p>
+      <hr class="my-4" />
+
+      {% if user.is_authenticated %}
+        <div class="alert alert-success" role="alert">
+          <h4>Bonjour, {{ user.username }} ! 👋</h4>
+          <p>
+            Vous êtes connecté avec l'email : <strong>{{ user.email }}</strong>
+          </p>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-md-4 mb-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <i class="bi bi-person-circle" style="font-size: 2rem"></i>
+                <h5 class="card-title">Sessions</h5>
+                <p class="card-text">Gérez les informations des Sessions</p>
+                {% comment %} <a href="{% url 'accounts:profile' %}" class="btn btn-primary">Voir mon profil</a> {% endcomment %}
+                <a href="{% url 'accounts:profile' %}" class="btn btn-primary">Voir Sessions</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <i class="bi bi-person-circle" style="font-size: 2rem"></i>
+                <h5 class="card-title">Cours</h5>
+                <p class="card-text">Gérez les informations des Cours</p>
+                {% comment %} <a href="{% url 'accounts:profile' %}" class="btn btn-primary">Voir mon profil</a> {% endcomment %}
+                <a href="{% url 'accounts:profile' %}" class="btn btn-primary">Voir Cours</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <i class="bi bi-gear" style="font-size: 2rem"></i>
+                <h5 class="card-title">Formateur</h5>
+                <p class="card-text">Gérez les informations des Formateurs</p>
+                <a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-primary">Formateur</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <i class="bi bi-box-arrow-right" style="font-size: 2rem"></i>
+                <h5 class="card-title">Apprentis</h5>
+                <p class="card-text">Gérez les informations des Apprentis</p>
+                <a href="{% url 'accounts:logout' %}" class="btn btn-outline-danger">Apprentis</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <p>Rejoignez-nous dès aujourd'hui pour accéder à toutes les fonctionnalités.</p>
+        <div class="mt-4">
+          <a class="btn btn-primary btn-lg me-3" href="{% url 'accounts:login' %}" role="button"><i class="bi bi-box-arrow-in-right"></i> Se connecter</a>
+          <a class="btn btn-outline-secondary btn-lg" href="{% url 'accounts:register' %}" role="button"><i class="bi bi-person-plus"></i> S'inscrire</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

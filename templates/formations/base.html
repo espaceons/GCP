@@ -1,0 +1,10 @@
+<!-- formations/base.html -->
+{% extends 'base.html' %} {% load static %} {% block extra_css %}
+  <link rel="stylesheet" href="{% static 'formations/css/formations.css' %}" />
+{% endblock %} {% block content %}
+  <div class="formations-container">
+    {% block formations_content %}
+
+    {% endblock %}
+  </div>
+{% endblock %}
