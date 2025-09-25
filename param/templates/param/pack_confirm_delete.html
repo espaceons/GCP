@@ -1,0 +1,22 @@
+{% extends 'formations/base.html' %} {% block title %}
+  Supprimer le Pack
+{% endblock %} {% block formations_content %}
+  <div class="container mt-5">
+    <div class="card shadow-sm">
+      <div class="card-body text-center">
+        <h3 class="text-danger">⚠️ Confirmation de suppression</h3>
+        <p>
+          Êtes-vous sûr de vouloir supprimer le pack
+          <strong>"{{ pack.nom }}"</strong> ?
+        </p>
+        <p class="text-muted">Cette action est irréversible. Tous les programmes associés resteront, mais le pack sera définitivement supprimé.</p>
+
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+          <a href="{% url 'param:pack_list' %}" class="btn btn-secondary">Annuler</a>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

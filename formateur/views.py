@@ -9,7 +9,10 @@ from formateur.models import Formateur
 @login_required
 def liste_formateurs(request):
     formateurs = Formateur.objects.select_related('user').filter(statut=True)
-    return render(request, 'formateur/liste.html', {'formateurs': formateurs})
+    context = {
+        'formateurs': formateurs
+    }
+    return render(request, 'formateur/liste.html', context)
 
 
 @login_required
@@ -17,8 +20,10 @@ def detail_formateur(request, formateur_id):
     formateur = get_object_or_404(Formateur, id=formateur_id)
     cours = formateur.cours.all()
     sessions = formateur.sessions_formateur.all()
-    return render(request, 'formateur/detail.html', {
+
+    context = {
         'formateur': formateur,
         'cours': cours,
-        'sessions': sessions
-    })
+        'sessions': sessions,
+    }
+    return render(request, 'formateur/detail.html', context)

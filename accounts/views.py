@@ -26,6 +26,12 @@ from django.utils.http import url_has_allowed_host_and_scheme
 #         profile_form = UserProfileForm()
 #     return render(request, 'accounts/register.html', {'form': form, 'profile_form': profile_form})
 
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from .forms import RegistrationForm
+from .models import UserProfile
+
+
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -34,16 +40,18 @@ def register(request):
             user.set_password(form.cleaned_data['password'])
             user.save()
 
-            # cree un profil utilisateur
+            # Créer un profil utilisateur
             UserProfile.objects.create(user=user)
-            # connecter l'utilisateur automatiquement
+
+            # Connecter l'utilisateur automatiquement
             login(request, user)
 
             return redirect('home')
+    else:
+        form = RegistrationForm()
 
-        else:
-            form = RegistrationForm()
     return render(request, 'accounts/register.html', {'form': form})
+
 
 # @login_required
 # def profile(request):

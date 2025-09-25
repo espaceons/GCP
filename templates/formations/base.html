@@ -18,9 +18,12 @@
     {% endblock %}
   </head>
   <body>
-    {% block content %}
+    {% include 'nav.html' %}
+    <main>
+      {% block formations_content %}
 
-    {% endblock %}
+      {% endblock %}
+    </main>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

@@ -52,3 +52,30 @@ class Session(models.Model):
 
     def __str__(self):
         return f"{self.cours.titre} - {self.date_debut.strftime('%d/%m/%Y')}"
+
+
+# PAck de Formation / Programme de Formation :
+
+
+class PackFormation(models.Model):
+    titre = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    date_debut = models.DateField()
+    date_fin = models.DateField()
+    prix = models.DecimalField(max_digits=10, decimal_places=2)
+    nb_apprentis_max = models.PositiveIntegerField()
+    actif = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.titre
+
+
+class Programme(models.Model):
+    pack = models.ForeignKey(
+        PackFormation, related_name="programmes", on_delete=models.CASCADE)
+    titre = models.CharField(max_length=200)
+    contenu = models.TextField()
+    duree = models.CharField(max_length=100, help_text="Ex: 2 jours, 10h")
+
+    def __str__(self):
+        return f"{self.titre} ({self.pack.titre})"

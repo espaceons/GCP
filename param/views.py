@@ -1,3 +1,6 @@
+from .forms import PackFormationForm, ProgrammeFormSet
+from .models import PackFormation
+from django.shortcuts import render, get_object_or_404, redirect
 from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -44,3 +47,63 @@ def detail_cours(request, cours_id):
         'sessions': sessions,
     }
     return render(request, 'param/cours_detail.html', context)
+
+
+# CRUD Pack
+
+
+@login_required
+def liste_packs(request):
+    packs = PackFormation.objects.all()
+    return render(request, 'param/pack_liste.html', {'packs': packs})
+
+
+@login_required
+def detail_pack(request, pack_id):
+    pack = get_object_or_404(PackFormation, id=pack_id)
+    programmes = pack.programmes.all()
+    return render(request, 'param/pack_detail.html', {'pack': pack, 'programmes': programmes})
+
+
+@login_required
+def ajouter_pack(request):
+    if request.method == 'POST':
+        form = PackFormationForm(request.POST)
+        formset = ProgrammeFormSet(request.POST)
+        if form.is_valid() and formset.is_valid():
+            pack = form.save()
+            formset.instance = pack
+            formset.save()
+            return redirect('param:pack_list')
+    else:
+        form = PackFormationForm()
+        formset = ProgrammeFormSet()
+    return render(request, 'param/pack_form.html', {'form': form, 'formset': formset, 'title': 'Ajouter un Pack'})
+
+
+@login_required
+def modifier_pack(request, pk):
+    pack = get_object_or_404(PackFormation, id=pk)
+    if request.method == 'POST':
+        form = PackFormationForm(request.POST, instance=pack)
+        formset = ProgrammeFormSet(request.POST, instance=pack)
+        if form.is_valid() and formset.is_valid():
+            form.save()
+            formset.save()
+            return redirect('param:pack_list')
+    else:
+        form = PackFormationForm(instance=pack)
+        formset = ProgrammeFormSet(instance=pack)
+    return render(request, 'param/pack_form.html', {'form': form, 'formset': formset, 'title': 'Modifier le Pack'})
+
+
+@login_required
+def supprimer_pack(request, pk):
+    pack = get_object_or_404(PackFormation, id=pk)
+    if request.method == 'POST':
+        pack.delete()
+        return redirect('param:pack_list')
+    return render(request, 'param/pack_confirm_delete.html', {'pack': pack})
+
+
+# CRUD Programme de Formation

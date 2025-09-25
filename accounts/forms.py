@@ -29,30 +29,21 @@ class UserProfileForm(forms.ModelForm):
         }
 
 
-class RegistrationForm(UserCreationForm):
-    password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    confirm_password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+class RegistrationForm(forms.ModelForm):
+    password2 = forms.CharField(
+        label="Confirmer le mot de passe", widget=forms.PasswordInput)
 
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'phone_number',
-                  'date_of_birth', 'profile_picture', 'bio']
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
-            'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
-            'date_of_birth': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'profile_picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'bio': forms.Textarea(attrs={'class': 'form-control'}),
-        }
+        fields = ('username', 'email', 'password')
 
+    password = forms.CharField(widget=forms.PasswordInput)
 
-def clean_password_confirm(self):
-    password = self.cleaned_data.get("password")
-    confirm_password = self.cleaned_data.get("confirm_password")
-    if password != confirm_password:
-        raise forms.ValidationError(
-            "Le mot de passe et la confirmation ne correspondent pas.")
-    return confirm_password
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        password2 = cleaned_data.get("password2")
+        if password != password2:
+            raise forms.ValidationError(
+                "Les mots de passe ne correspondent pas")
+        return cleaned_data

@@ -1,4 +1,4 @@
-<!-- Navbar -->
+{% comment %} <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand" href="{% url 'home' %}">Centre Formation</a>
@@ -8,7 +8,7 @@
       <ul class="navbar-nav ms-auto">
         {% if user.is_authenticated %}
           <li class="nav-item">
-            <a class="nav-link" href="#">Tableau de bord</a>
+            <a class="nav-link" href="{% url 'accounts:dashboard' %}">Tableau de bord</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'accounts:logout' %}"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
@@ -24,4 +24,162 @@
       </ul>
     </div>
   </div>
+</nav> {% endcomment %}
+
+<!-- templates/nav.html -->
+<!-- Navbar qui apparaît seulement quand on scroll vers le haut -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="navbar">
+  <div class="container">
+    <!-- Brand -->
+    <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+      <i class="bi bi-book-half me-2"></i>
+      Centre Formation
+    </a>
+
+    <!-- Toggler -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+
+    <!-- Navbar content -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- Menu principal -->
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'home' %}"><i class="bi bi-house"></i> Accueil</a>
+        </li>
+        {% if user.is_authenticated %}
+          <!-- Espace de Travail Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="workspaceDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-grid-1x2"></i> Espace de Travail</a>
+            <ul class="dropdown-menu" aria-labelledby="workspaceDropdown">
+              <li class="nav-item">
+                <a class="dropdown-item" href="{% url 'param:pack_list' %}"><i class="bi bi-back text-info"></i> Packs</a>
+              </li>
+              <li class="nav-item">
+                <a class="dropdown-item" href="{% url 'param:coursliste' %}"><i class="bi bi-journal-bookmark-fill text-success"></i> Programmes</a>
+              </li>
+              <li class="nav-item">
+                <a class="dropdown-item" href="{% url 'param:coursliste' %}"><i class="bi bi-person-badge text-warning"></i> Formateurs</a>
+              </li>
+              <li class="nav-item">
+                <a class="dropdown-item" href="{% url 'param:coursliste' %}"><i class="bi bi-people text-info"></i> Apprentis</a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'param:sessionsliste' %}"><i class="bi bi-calendar-event text-primary"></i> Sessions</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'param:coursliste' %}"><i class="bi bi-book text-success"></i> Cours</a>
+          </li>
+
+          {% if user.is_staff %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'admin:index' %}"><i class="bi bi-gear"></i> Administration</a>
+            </li>
+          {% endif %}
+        {% endif %}
+      </ul>
+
+      <!-- Menu utilisateur -->
+      <ul class="navbar-nav ms-auto">
+        {% if user.is_authenticated %}
+          <!-- Menu déroulant utilisateur -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <!-- Photo de profil ou avatar -->
+              {% if user.profile_picture %}
+                <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" class="rounded-circle me-2" width="32" height="32" style="object-fit: cover;" />
+              {% else %}
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                  <span class="text-white fw-bold small">{{ user.username|first|upper }}</span>
+                </div>
+              {% endif %}
+              <span class="d-none d-md-inline">{{ user.username }}</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+              <!-- En-tête du menu -->
+              <li>
+                <div class="dropdown-header">
+                  <div class="d-flex align-items-center">
+                    {% if user.profile_picture %}
+                      <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;" />
+                    {% else %}
+                      <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
+                        <span class="text-white fw-bold">{{ user.username|first|upper }}</span>
+                      </div>
+                    {% endif %}
+                    <div>
+                      <strong>{{ user.get_full_name|default:user.username }}</strong>
+                      <div class="small text-muted">{{ user.email }}</div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+
+              <!-- Liens de profil -->
+              <li>
+                <a class="dropdown-item" href="{% url 'accounts:profile' %}"><i class="bi bi-person"></i> Mon Profil</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="{% url 'accounts:edit_profile' %}"><i class="bi bi-pencil"></i> Modifier le profil</a>
+              </li>
+
+              <!-- Tableau de bord si applicable -->
+              {% if user.is_staff or user.is_superuser %}
+                <li>
+                  <a class="dropdown-item" href="{% url 'accounts:dashboard' %}"><i class="bi bi-speedometer2"></i> Tableau de bord</a>
+                </li>
+              {% endif %}
+
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+
+              <!-- Paramètres -->
+              <li>
+                <a class="dropdown-item" href="{% url 'accounts:password_change' %}"><i class="bi bi-shield-lock"></i> Changer le mot de passe</a>
+              </li>
+
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+
+              <!-- Déconnexion -->
+              <li>
+                <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right"></i> Déconnexion</button>
+                </form>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Notification badge (optionnel) -->
+          <li class="nav-item">
+            <a class="nav-link position-relative" href="#">
+              <i class="bi bi-bell"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                3
+                <span class="visually-hidden">notifications</span>
+              </span>
+            </a>
+          </li>
+        {% else %}
+          <!-- Menu pour utilisateurs non connectés -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'accounts:login' %}"><i class="bi bi-box-arrow-in-right"></i> Connexion</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'accounts:register' %}"><i class="bi bi-person-plus"></i> Inscription</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
 </nav>
+
+<div style="height: 80px;"></div>

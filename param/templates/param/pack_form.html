@@ -1,0 +1,151 @@
+{% extends 'formations/base.html' %} {% block formations_content %}
+<div class="container mt-4">
+  <h2>{{ title }}</h2>
+  <form method="post">
+    {% csrf_token %}
+
+    <!-- Informations générales du Pack -->
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">
+        <i class="bi bi-box"></i> Informations Pack
+      </div>
+      <div class="card-body">{{ form.as_p }}</div>
+    </div>
+
+    <!-- Programmes -->
+    <div class="card mb-4">
+      <div
+        class="card-header d-flex justify-content-between align-items-center bg-secondary text-white"
+      >
+        <span><i class="bi bi-journal-text"></i> Programmes</span>
+        <button type="button" id="add-programme" class="btn btn-sm btn-light">
+          <i class="bi bi-plus-circle"></i> Ajouter un programme
+        </button>
+      </div>
+      <div class="card-body" id="programmes-container">
+        {{ formset.management_form }} {% for subform in formset %}
+        <div class="programme-form card shadow-sm mb-3">
+          <div
+            class="card-header d-flex justify-content-between align-items-center"
+          >
+            <strong>Programme {{ forloop.counter }}</strong>
+            <button
+              type="button"
+              class="btn btn-sm btn-danger remove-programme"
+            >
+              <i class="bi bi-x-circle"></i> Supprimer
+            </button>
+          </div>
+          <div class="card-body">{{ subform.as_p }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="text-center">
+      <button type="submit" class="btn btn-success btn-lg">
+        <i class="bi bi-check-circle"></i> Enregistrer
+      </button>
+      <a href="{% url 'param:pack_list' %}" class="btn btn-secondary btn-lg"
+        ><i class="bi bi-arrow-left"></i> Annuler</a
+      >
+    </div>
+  </form>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const addButton = document.getElementById("add-programme");
+    const container = document.getElementById("programmes-container");
+    const totalForms = document.getElementById("id_programmes-TOTAL_FORMS");
+
+    function updateTitles() {
+      const forms = container.getElementsByClassName("programme-form");
+      Array.from(forms).forEach((form, index) => {
+        const header = form.querySelector(".card-header strong");
+        if (header) {
+          header.textContent = "Programme " + (index + 1);
+        }
+      });
+    }
+
+    function addRemoveButtonListener(button) {
+      button.addEventListener("click", function () {
+        const forms = container.getElementsByClassName("programme-form");
+        if (forms.length > 1) {
+          this.closest(".programme-form").remove();
+
+          // Réindexer
+          Array.from(forms).forEach((form, index) => {
+            form
+              .querySelectorAll("input, textarea, select, label")
+              .forEach((el) => {
+                if (el.name) {
+                  el.name = el.name.replace(
+                    /programmes-(\d+)-/,
+                    `programmes-${index}-`
+                  );
+                }
+                if (el.id) {
+                  el.id = el.id.replace(
+                    /programmes-(\d+)-/,
+                    `programmes-${index}-`
+                  );
+                }
+                if (el.htmlFor) {
+                  el.htmlFor = el.htmlFor.replace(
+                    /programmes-(\d+)-/,
+                    `programmes-${index}-`
+                  );
+                }
+              });
+          });
+
+          totalForms.value = forms.length;
+          updateTitles();
+        }
+      });
+    }
+
+    // Activer les boutons Supprimer existants
+    container
+      .querySelectorAll(".remove-programme")
+      .forEach(addRemoveButtonListener);
+
+    // Ajouter un nouveau programme
+    addButton.addEventListener("click", function () {
+      const currentForms =
+        container.getElementsByClassName("programme-form").length;
+      const formIndex = currentForms;
+
+      const newForm = container
+        .querySelector(".programme-form")
+        .cloneNode(true);
+
+      newForm.innerHTML = newForm.innerHTML.replace(
+        /programmes-(\d+)-/g,
+        `programmes-${formIndex}-`
+      );
+
+      // vider les champs
+      newForm.querySelectorAll("input, textarea").forEach((input) => {
+        if (input.type === "checkbox") {
+          input.checked = false;
+        } else {
+          input.value = "";
+        }
+      });
+
+      container.appendChild(newForm);
+
+      // Activer le bouton supprimer du nouveau
+      addRemoveButtonListener(newForm.querySelector(".remove-programme"));
+
+      totalForms.value = formIndex + 1;
+      updateTitles();
+    });
+
+    updateTitles();
+  });
+</script>
+{% endblock %}

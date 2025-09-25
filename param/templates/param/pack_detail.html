@@ -1,0 +1,33 @@
+{% extends 'formations/base.html' %} {% block formations_content %}
+<div class="container mt-4">
+  <h2>{{ pack.titre }}</h2>
+  <p>{{ pack.description }}</p>
+  <p>
+    <i class="bi bi-calendar"></i> {{ pack.date_debut }} → {{ pack.date_fin }}
+  </p>
+  <p><i class="bi bi-cash"></i> {{ pack.prix }} DT</p>
+  <p>
+    <i class="bi bi-people"></i> Max apprentis : {{ pack.nb_apprentis_max }}
+  </p>
+
+  <h4>Programmes</h4>
+  <ul>
+    {% for prog in programmes %}
+    <li>
+      <strong>{{ prog.titre }}</strong> ({{ prog.duree }})<br />{{ prog.contenu
+      }}
+    </li>
+    {% empty %}
+    <li>Aucun programme défini</li>
+    {% endfor %}
+  </ul>
+
+  <a href="{% url 'param:modifier_pack' pack.id %}" class="btn btn-warning"
+    >Modifier</a
+  >
+  <a href="{% url 'param:supprimer_pack' pack.id %}" class="btn btn-danger"
+    >Supprimer</a
+  >
+  <a href="{% url 'param:liste_packs' %}" class="btn btn-secondary">Retour</a>
+</div>
+{% endblock %}
