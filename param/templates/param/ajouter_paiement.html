@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% block content %}
+  <div class="container mt-4">
+    <h2>💰 Nouveau Paiement pour {{ inscription.apprenti }}</h2>
+    <p>
+      Pack : <strong>{{ inscription.pack.titre }}</strong> ({{ inscription.pack.prix }} DT)
+    </p>
+    <hr />
+
+    <form method="post">
+      {% csrf_token %} {% for field in form %}
+        <div class="mb-3">
+          <label class="form-label">{{ field.label }}</label>
+          {{ field }} {% if field.errors %}
+            <div class="text-danger small">{{ field.errors }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-success"><i class="bi bi-cash"></i> Enregistrer</button>
+      <a href="{% url 'apprentis:detail_inscription' inscription.id %}" class="btn btn-secondary">Annuler</a>
+    </form>
+  </div>
+{% endblock %}

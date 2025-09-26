@@ -23,4 +23,12 @@ urlpatterns = [
     path("packs/add/", views.ajouter_pack, name="pack_add"),
     path("packs/<int:pk>/edit/", views.modifier_pack, name="pack_edit"),
     path("packs/<int:pk>/delete/", views.supprimer_pack, name="pack_delete"),
+
+
+    # ✅ Route dans un badge cliquable dans la liste des packs pour afficher les apprentis inscrits dans ce pack.
+    path("pack/<int:pack_id>/inscrits/",
+         views.inscrits_pack, name="inscrits_pack"),
+
+    path("inscription/<int:inscription_id>/paiement/",
+         views.ajouter_paiement, name="ajouter_paiement"),
 ]

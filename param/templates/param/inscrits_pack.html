@@ -1,0 +1,37 @@
+{% extends "base.html" %} {% block content %}
+<div class="container mt-4">
+  <h2>
+    <i class="bi bi-people"></i> Apprentis inscrits au pack : {{ pack.titre }}
+  </h2>
+  <hr />
+  {% if inscriptions %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Email</th>
+        <th>Téléphone</th>
+        <th>Date d'inscription</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for insc in inscriptions %}
+      <tr>
+        <td>{{ insc.apprenti.nom }}</td>
+        <td>{{ insc.apprenti.prenom }}</td>
+        <td>{{ insc.apprenti.email }}</td>
+        <td>{{ insc.apprenti.telephone }}</td>
+        <td>{{ insc.date_inscription|date:"d/m/Y H:i" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="alert alert-warning">Aucun apprenti inscrit pour ce pack.</div>
+  {% endif %}
+  <a href="{% url 'param:pack_list' %}" class="btn btn-secondary mt-3"
+    >⬅ Retour aux packs</a
+  >
+</div>
+{% endblock %}

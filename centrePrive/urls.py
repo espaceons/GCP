@@ -28,9 +28,9 @@ urlpatterns = [
 
     path('fca/', views.fca, name='fca'),
 
-    path('apprentis/', include('apprentis.urls')),
+    path('apprentis/', include(('apprentis.urls'), namespace='apprentis')),
 
-    path('formateurs/', include('formateur.urls')),
+    path('formateurs/', include(('formateur.urls'), namespace='formateurs')),
 
     path('param/', include(('param.urls', 'param'), namespace='param')),
 

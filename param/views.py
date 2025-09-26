@@ -1,4 +1,5 @@
-from .forms import PackFormationForm, ProgrammeFormSet
+from apprentis.models import Inscription
+from .forms import PackFormationForm, PaiementForm, ProgrammeFormSet
 from .models import PackFormation
 from django.shortcuts import render, get_object_or_404, redirect
 from django.shortcuts import render
@@ -104,6 +105,38 @@ def supprimer_pack(request, pk):
         pack.delete()
         return redirect('param:pack_list')
     return render(request, 'param/pack_confirm_delete.html', {'pack': pack})
+
+# On ajouter un badge cliquable dans la liste des packs pour afficher les apprentis inscrits dans ce pack.
+
+
+@login_required
+def inscrits_pack(request, pack_id):
+    pack = get_object_or_404(PackFormation, id=pack_id)
+    inscriptions = Inscription.objects.filter(
+        pack=pack).select_related("apprenti")
+    return render(request, "param/inscrits_pack.html", {
+        "pack": pack,
+        "inscriptions": inscriptions,
+    })
+
+
+def ajouter_paiement(request, inscription_id):
+    inscription = get_object_or_404(Inscription, id=inscription_id)
+
+    if request.method == "POST":
+        form = PaiementForm(request.POST)
+        if form.is_valid():
+            paiement = form.save(commit=False)
+            paiement.inscription = inscription
+            paiement.save()
+            return redirect("apprentis:detail_inscription", inscription.id)
+    else:
+        form = PaiementForm()
+
+    return render(request, "apprentis/ajouter_paiement.html", {
+        "form": form,
+        "inscription": inscription
+    })
 
 
 # CRUD Programme de Formation

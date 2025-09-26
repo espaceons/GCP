@@ -1,0 +1,59 @@
+{% extends "base.html" %} {% block content %}
+<div class="container mt-4">
+  <h2><i class="bi bi-list-ul"></i> Liste des inscriptions</h2>
+
+  <table class="table table-striped mt-3">
+    <thead>
+      <tr>
+        <th>Apprenti</th>
+        <th>Email</th>
+        <th>Pack de formation</th>
+        <th>Date d’inscription</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for inscription in inscriptions %}
+      <tr>
+        <td>
+          {{ inscription.apprenti.nom }} {{ inscription.apprenti.prenom }}
+        </td>
+        <td>{{ inscription.apprenti.email }}</td>
+        <td>{{ inscription.pack.titre }}</td>
+        <td>{{ inscription.date_inscription|date:"d/m/Y H:i" }}</td>
+        <td>
+          <a
+            href="{% url 'apprentis:detail_inscription' inscription.id %}"
+            class="btn btn-info btn-sm"
+          >
+            <i class="bi bi-eye"></i> Détail
+          </a>
+          <a
+            href="{% url 'apprentis:modifier_inscription' inscription.id %}"
+            class="btn btn-warning btn-sm"
+          >
+            <i class="bi bi-pencil"></i> Modifier
+          </a>
+          <a
+            href="{% url 'apprentis:supprimer_inscription' inscription.id %}"
+            class="btn btn-danger btn-sm"
+          >
+            <i class="bi bi-trash"></i> Supprimer
+          </a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="text-center">Aucune inscription trouvée.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="mt-3">
+    <a href="{% url 'apprentis:ajouter_inscription' %}" class="btn btn-success">
+      <i class="bi bi-plus-circle"></i> Nouvelle inscription
+    </a>
+  </div>
+</div>
+{% endblock %}

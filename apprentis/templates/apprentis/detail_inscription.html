@@ -1,0 +1,64 @@
+{% extends "base.html" %} {% block content %}
+<div class="container mt-4">
+  <h2><i class="bi bi-info-circle"></i> Détail de l’inscription</h2>
+
+  <ul class="list-group mt-3">
+    <li class="list-group-item">
+      <strong>Apprenti :</strong> {{ inscription.apprenti.nom }} {{
+      inscription.apprenti.prenom }}
+    </li>
+    <li class="list-group-item">
+      <strong>Email :</strong> {{ inscription.apprenti.email }}
+    </li>
+    <li class="list-group-item">
+      <strong>Pack de formation :</strong> {{ inscription.pack.titre }}
+    </li>
+    <li class="list-group-item">
+      <strong>Date d’inscription :</strong> {{
+      inscription.date_inscription|date:"d/m/Y H:i" }}
+    </li>
+  </ul>
+
+  <div class="mt-3">
+    <a href="{% url 'apprentis:liste_inscriptions' %}" class="btn btn-secondary"
+      >Retour</a
+    >
+    <a
+      href="{% url 'apprentis:modifier_inscription' inscription.id %}"
+      class="btn btn-warning"
+      >Modifier</a
+    >
+    <a
+      href="{% url 'apprentis:supprimer_inscription' inscription.id %}"
+      class="btn btn-danger"
+      >Supprimer</a
+    >
+  </div>
+
+  <h4>💳 Paiements</h4>
+  {% if inscription.paiements.all %}
+  <ul class="list-group mb-3">
+    {% for paiement in inscription.paiements.all %}
+    <li class="list-group-item d-flex justify-content-between">
+      {{ paiement.date_paiement|date:"d/m/Y H:i" }} – {{ paiement.montant }} DT
+      ({{ paiement.get_mode_display }})
+      <span
+        class="badge bg-{% if paiement.statut == 'valide' %}success{% elif paiement.statut == 'refuse' %}danger{% else %}warning{% endif %}"
+      >
+        {{ paiement.get_statut_display }}
+      </span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="text-muted">Aucun paiement enregistré.</p>
+  {% endif %}
+
+  <a
+    href="{% url 'apprentis:ajouter_paiement' inscription.id %}"
+    class="btn btn-primary"
+  >
+    <i class="bi bi-plus-circle"></i> Ajouter un paiement
+  </a>
+</div>
+{% endblock %}

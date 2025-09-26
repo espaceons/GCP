@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils import timezone
 from formateur.models import Formateur
 
 # Create your models here.
@@ -69,6 +69,10 @@ class PackFormation(models.Model):
     def __str__(self):
         return self.titre
 
+    @property
+    def nb_inscriptions(self):
+        return self.inscriptions.count()
+
 
 class Programme(models.Model):
     pack = models.ForeignKey(
@@ -79,3 +83,28 @@ class Programme(models.Model):
 
     def __str__(self):
         return f"{self.titre} ({self.pack.titre})"
+
+
+# paiement
+
+class Paiement(models.Model):
+    inscription = models.ForeignKey("apprentis.Inscription",
+                                    related_name="paiements", on_delete=models.CASCADE
+                                    )
+    montant = models.DecimalField(max_digits=10, decimal_places=2)
+    date_paiement = models.DateTimeField(default=timezone.now)
+    mode = models.CharField(
+        max_length=20,
+        choices=[("especes", "Espèces"), ("cheque", "Chèque"),
+                 ("virement", "Virement"), ("carte", "Carte bancaire")],
+        default="especes"
+    )
+    statut = models.CharField(
+        max_length=20,
+        choices=[("en_attente", "En attente"),
+                 ("valide", "Validé"), ("refuse", "Refusé")],
+        default="en_attente"
+    )
+
+    def __str__(self):
+        return f"{self.inscription.apprenti} → {self.montant} DT ({self.get_statut_display()})"

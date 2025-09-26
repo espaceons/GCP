@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
-from .models import PackFormation, Programme
+from .models import PackFormation, Paiement, Programme
 
 
 class PackFormationForm(forms.ModelForm):
@@ -37,3 +37,14 @@ ProgrammeFormSet = inlineformset_factory(
     extra=1,  # nombre de formulaires vides par défaut
     can_delete=True
 )
+
+
+class PaiementForm(forms.ModelForm):
+    class Meta:
+        model = Paiement
+        fields = ["montant", "mode", "statut"]
+        widgets = {
+            "montant": forms.NumberInput(attrs={"class": "form-control", "step": "0.01"}),
+            "mode": forms.Select(attrs={"class": "form-select"}),
+            "statut": forms.Select(attrs={"class": "form-select"}),
+        }

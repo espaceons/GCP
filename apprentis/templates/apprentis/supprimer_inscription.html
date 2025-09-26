@@ -1,0 +1,18 @@
+{% extends "base.html" %} {% block content %}
+<div class="container mt-4">
+  <h2><i class="bi bi-trash"></i> Supprimer l’inscription</h2>
+  <p>
+    Voulez-vous vraiment supprimer l’inscription de
+    <b>{{ inscription.apprenti.nom }} {{ inscription.apprenti.prenom }}</b> au
+    pack <b>{{ inscription.pack.titre }}</b> ?
+  </p>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+    <a href="{% url 'apprentis:liste_inscriptions' %}" class="btn btn-secondary"
+      >Annuler</a
+    >
+  </form>
+</div>
+{% endblock %}
